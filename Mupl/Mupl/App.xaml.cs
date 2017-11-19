@@ -1,4 +1,6 @@
-﻿using Prism.Unity.Windows;
+﻿using Microsoft.Practices.Unity;
+using Mupl.Model;
+using Prism.Unity.Windows;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
@@ -23,6 +25,8 @@ namespace Mupl
 
         protected override Task OnInitializeAsync(IActivatedEventArgs args)
         {
+            Container.RegisterType<IMediaServerCollection, MediaServerCollection>(new ContainerControlledLifetimeManager());
+
             return base.OnInitializeAsync(args);
         }
 

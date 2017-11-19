@@ -5,9 +5,15 @@
     xmlns:local="using:Mupl"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:prismMvvm="using:Prism.Windows.Mvvm"
+    prismMvvm:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <TextBlock Grid.Row="0" Grid.Column="0">Hello world!</TextBlock>
+        <ListView x:Name="contentList"
+                  HorizontalAlignment="Left"
+                  ItemsSource="{Binding MediaServers}"
+                  SelectionMode="Single">
+        </ListView>
     </Grid>
 </Page>
