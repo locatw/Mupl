@@ -1,4 +1,5 @@
-﻿using Prism.Mvvm;
+﻿using Mupl.Dlna;
+using Prism.Mvvm;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,12 +12,12 @@ namespace Mupl.Model
         {
             return Task.Run(async () =>
             {
-                var devices = await Dlna.Device.SearchUPnPDeviceAsync("MediaServer", 1);
+                var devices = await Device.SearchUPnPDeviceAsync("MediaServer", 1);
 
-                devices.Select(device => device.Name).ToList().ForEach(name => MediaServers.Add(name));
+                devices.ToList().ForEach(device => MediaServers.Add(device));
             });
         }
 
-        public ObservableCollection<string> MediaServers { get; } = new ObservableCollection<string>();
+        public ObservableCollection<Device> MediaServers { get; } = new ObservableCollection<Device>();
     }
 }

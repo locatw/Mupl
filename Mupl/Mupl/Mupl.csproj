@@ -152,6 +152,10 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Mupl.Dlna\Mupl.Dlna.csproj">
+      <Project>{e67973d6-0c10-4f64-886d-a11c9f7cd42c}</Project>
+      <Name>Mupl.Dlna</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Mupl.Model\Mupl.Model.csproj">
       <Project>{bee0698c-ac6b-4ef0-b688-05f1ada0d7da}</Project>
       <Name>Mupl.Model</Name>

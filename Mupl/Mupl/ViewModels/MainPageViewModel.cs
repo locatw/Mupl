@@ -1,9 +1,11 @@
-﻿using Mupl.Model;
+﻿using Mupl.Dlna;
+using Mupl.Model;
 using Prism.Mvvm;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
 using System.Reactive.Disposables;
+using System.Reactive.Linq;
 
 namespace Mupl.ViewModels
 {
@@ -18,8 +20,16 @@ namespace Mupl.ViewModels
             this.mediaServerCollection = mediaServerCollection;
 
             this.MediaServers = mediaServerCollection.MediaServers
-                                .ToReadOnlyReactiveCollection<string>()
-                                .AddTo(this.Disposable);
+                                    .ToReadOnlyReactiveCollection<Device>()
+                                    .AddTo(this.Disposable);
+            this.SelectedServer = new ReactiveProperty<Device>();
+            this.SelectedServer.ObserveProperty(x => x.Value)
+                .Where(x => x != null)
+                .Subscribe(x =>
+                {
+                    System.Diagnostics.Debug.WriteLine(x.Name);
+                })
+                .AddTo(Disposable);
 
             this.mediaServerCollection.SearchAsync();
         }
@@ -29,6 +39,8 @@ namespace Mupl.ViewModels
             this.Disposable.Dispose();
         }
 
-        public ReadOnlyReactiveCollection<string> MediaServers { get; }
+        public ReadOnlyReactiveCollection<Device> MediaServers { get; }
+
+        public ReactiveProperty<Device> SelectedServer { get; set; }
     }
 }

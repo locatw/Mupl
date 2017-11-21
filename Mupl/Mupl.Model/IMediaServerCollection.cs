@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using Mupl.Dlna;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
 namespace Mupl.Model
@@ -7,6 +8,6 @@ namespace Mupl.Model
     {
         Task SearchAsync();
 
-        ObservableCollection<string> MediaServers { get; }
+        ObservableCollection<Device> MediaServers { get; }
     }
 }

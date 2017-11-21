@@ -13,7 +13,13 @@
         <ListView x:Name="contentList"
                   HorizontalAlignment="Left"
                   ItemsSource="{Binding MediaServers}"
+                  SelectedItem="{Binding SelectedServer.Value, Mode=TwoWay}"
                   SelectionMode="Single">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Name}" />
+                </DataTemplate>
+            </ListView.ItemTemplate>
         </ListView>
     </Grid>
 </Page>
