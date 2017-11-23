@@ -25,7 +25,7 @@ namespace Mupl
 
         protected override Task OnInitializeAsync(IActivatedEventArgs args)
         {
-            Container.RegisterType<IMediaServerRepository, MediaServerRepository>(new ContainerControlledLifetimeManager());
+            Container.RegisterInstance<IMediaServerRepository>(new MediaServerRepository());
 
             return base.OnInitializeAsync(args);
         }

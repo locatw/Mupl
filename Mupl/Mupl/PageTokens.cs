@@ -2,6 +2,7 @@
 {
     public enum PageTokens
     {
-        Main
+        Main,
+        Directory
     }
 }

@@ -6,5 +6,7 @@ namespace Mupl.Model
     public interface IMediaServerRepository
     {
         Task<IReadOnlyCollection<MediaServer>> GetAllAsync();
+
+        Task<MediaServer> FindAsync(string udn);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Mupl.Model;
 using Prism.Mvvm;
+using Prism.Windows.Navigation;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
@@ -11,21 +12,21 @@ namespace Mupl.ViewModels
 {
     public class MainPageViewModel : BindableBase, IDisposable
     {
+        private INavigationService navigationService;
+
         private IMediaServerRepository mediaServerRepository;
 
         private CompositeDisposable Disposable { get; } = new CompositeDisposable();
 
-        public MainPageViewModel(IMediaServerRepository mediaServerRepository)
+        public MainPageViewModel(INavigationService navigationService, IMediaServerRepository mediaServerRepository)
         {
+            this.navigationService = navigationService;
             this.mediaServerRepository = mediaServerRepository;
 
             this.SelectedServer = new ReactiveProperty<MediaServer>();
             this.SelectedServer.ObserveProperty(x => x.Value)
                 .Where(x => x != null)
-                .Subscribe(mediaServer =>
-                {
-                    System.Diagnostics.Debug.WriteLine(mediaServer.Name);
-                })
+                .Subscribe(mediaServer => MoveToContentDirectoryPage(mediaServer))
                 .AddTo(Disposable);
 
             Initialize();
@@ -40,6 +41,11 @@ namespace Mupl.ViewModels
         {
             var mediaServers = await mediaServerRepository.GetAllAsync();
             mediaServers.ToList().ForEach(x => MediaServers.Add(x));
+        }
+
+        private void MoveToContentDirectoryPage(MediaServer selectedMediaServer)
+        {
+            navigationService.Navigate(PageTokens.Directory.ToString(), selectedMediaServer.Udn);
         }
 
         public ReactiveCollection<MediaServer> MediaServers { get; private set; } = new ReactiveCollection<MediaServer>();
