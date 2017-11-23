@@ -7,8 +7,8 @@ namespace Mupl.Model
     {
         public MediaServer(Dlna.Device device)
         {
+            this.Id = device.Udn;
             this.Name = device.Name;
-            this.Udn = device.Udn;
         }
 
         public async void LoadContentDirectoriesAsync()
@@ -19,9 +19,9 @@ namespace Mupl.Model
             ContentDirectories.Add(new ContentDirectory() { Name = "Directory2" });
         }
 
-        public string Name { get; private set; }
+        public string Id { get; private set; }
 
-        public string Udn { get; private set; }
+        public string Name { get; private set; }
 
         public ObservableCollection<ContentDirectory> ContentDirectories { get; } = new ObservableCollection<ContentDirectory>();
     }

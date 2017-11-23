@@ -23,8 +23,8 @@ namespace Mupl.ViewModels
         {
             base.OnNavigatedTo(e, viewModelState);
 
-            var udn = (string)e.Parameter;
-            mediaServer = await mediaServerRepository.FindAsync(udn);
+            var id = (string)e.Parameter;
+            mediaServer = await mediaServerRepository.FindAsync(id);
 
             if (mediaServer == null)
             {

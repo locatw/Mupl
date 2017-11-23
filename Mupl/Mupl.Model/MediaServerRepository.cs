@@ -18,14 +18,14 @@ namespace Mupl.Model
             return mediaServers;
         }
 
-        public async Task<MediaServer> FindAsync(string udn)
+        public async Task<MediaServer> FindAsync(string id)
         {
             if (mediaServers == null)
             {
                 await LoadAsync();
             }
 
-            return mediaServers.Find(server => server.Udn == udn);
+            return mediaServers.Find(server => server.Id == id);
         }
 
         private async Task LoadAsync()

@@ -7,6 +7,6 @@ namespace Mupl.Model
     {
         Task<IReadOnlyCollection<MediaServer>> GetAllAsync();
 
-        Task<MediaServer> FindAsync(string udn);
+        Task<MediaServer> FindAsync(string id);
     }
 }
