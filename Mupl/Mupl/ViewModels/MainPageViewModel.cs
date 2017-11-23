@@ -1,9 +1,9 @@
-﻿using Mupl.Dlna;
-using Mupl.Model;
+﻿using Mupl.Model;
 using Prism.Mvvm;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
+using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 
@@ -11,27 +11,24 @@ namespace Mupl.ViewModels
 {
     public class MainPageViewModel : BindableBase, IDisposable
     {
-        private IMediaServerCollection mediaServerCollection;
+        private IMediaServerRepository mediaServerRepository;
 
         private CompositeDisposable Disposable { get; } = new CompositeDisposable();
 
-        public MainPageViewModel(IMediaServerCollection mediaServerCollection)
+        public MainPageViewModel(IMediaServerRepository mediaServerRepository)
         {
-            this.mediaServerCollection = mediaServerCollection;
+            this.mediaServerRepository = mediaServerRepository;
 
-            this.MediaServers = mediaServerCollection.MediaServers
-                                    .ToReadOnlyReactiveCollection<Device>()
-                                    .AddTo(this.Disposable);
-            this.SelectedServer = new ReactiveProperty<Device>();
+            this.SelectedServer = new ReactiveProperty<MediaServer>();
             this.SelectedServer.ObserveProperty(x => x.Value)
                 .Where(x => x != null)
-                .Subscribe(x =>
+                .Subscribe(mediaServer =>
                 {
-                    System.Diagnostics.Debug.WriteLine(x.Name);
+                    System.Diagnostics.Debug.WriteLine(mediaServer.Name);
                 })
                 .AddTo(Disposable);
 
-            this.mediaServerCollection.SearchAsync();
+            Initialize();
         }
 
         public void Dispose()
@@ -39,8 +36,14 @@ namespace Mupl.ViewModels
             this.Disposable.Dispose();
         }
 
-        public ReadOnlyReactiveCollection<Device> MediaServers { get; }
+        private async void Initialize()
+        {
+            var mediaServers = await mediaServerRepository.GetAllAsync();
+            mediaServers.ToList().ForEach(x => MediaServers.Add(x));
+        }
 
-        public ReactiveProperty<Device> SelectedServer { get; set; }
+        public ReactiveCollection<MediaServer> MediaServers { get; private set; } = new ReactiveCollection<MediaServer>();
+
+        public ReactiveProperty<MediaServer> SelectedServer { get; set; }
     }
 }

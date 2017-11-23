@@ -106,8 +106,9 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="IMediaServerCollection.cs" />
-    <Compile Include="MediaServerCollection.cs" />
+    <Compile Include="IMediaServerRepository.cs" />
+    <Compile Include="MediaServer.cs" />
+    <Compile Include="MediaServerRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\Mupl.Model.rd.xml" />
   </ItemGroup>
