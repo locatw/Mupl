@@ -11,6 +11,13 @@ namespace Mupl.Dlna
         {
             Name = device.FriendlyName;
             Udn = device.UDN;
+            BaseUrl = device.URLBase;
+            Services = device.Services.Select(service => ConvertService(service)).Where(x => x != null);
+        }
+
+        public IService FindService(ServiceKind serviceKind)
+        {
+            return Services.First(service => service.ServiceKind == serviceKind);
         }
 
         public static async Task<IEnumerable<Device>> SearchUPnPDeviceAsync(string deviceType, int deviceVersion)
@@ -23,5 +30,22 @@ namespace Mupl.Dlna
         public string Name { get; private set; }
 
         public string Udn { get; private set; }
+
+        public string BaseUrl { get; private set; }
+
+        public IEnumerable<IService> Services { get; private set; }
+
+        private IService ConvertService(UPnP.Service service)
+        {
+            if (service.ServiceId == ContentDirectory.Service.ServiceId)
+            {
+                return new ContentDirectory.Service(this, service);
+            }
+            else
+            {
+                // ignore unsupported service.
+                return null;
+            }
+        }
     }
 }

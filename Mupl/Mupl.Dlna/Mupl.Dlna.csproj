@@ -106,9 +106,22 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="ContentDirectory.cs" />
+    <Compile Include="ContentDirectory\Body.cs" />
+    <Compile Include="ContentDirectory\BrowseAction.cs" />
+    <Compile Include="ContentDirectory\BrowseFlag.cs" />
+    <Compile Include="ContentDirectory\BrowseResponse.cs" />
+    <Compile Include="ContentDirectory\Container.cs" />
+    <Compile Include="ContentDirectory\ContentDirectory.cs" />
+    <Compile Include="ContentDirectory\DidlLite.cs" />
+    <Compile Include="ContentDirectory\DidlLiteElement.cs" />
+    <Compile Include="ContentDirectory\Service.cs" />
     <Compile Include="Device.cs" />
+    <Compile Include="ContentDirectory\Filter.cs" />
+    <Compile Include="IAction.cs" />
+    <Compile Include="IService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ContentDirectory\Result.cs" />
+    <Compile Include="ServiceKind.cs" />
     <EmbeddedResource Include="Properties\Mupl.Dlna.rd.xml" />
   </ItemGroup>
   <ItemGroup>
@@ -119,6 +132,7 @@
       <Version>1.0.30</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
