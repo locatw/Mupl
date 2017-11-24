@@ -45,7 +45,9 @@ namespace Mupl.ViewModels
 
         private void MoveToContentDirectoryPage(MediaServer selectedMediaServer)
         {
-            navigationService.Navigate(PageTokens.Directory.ToString(), selectedMediaServer.Id);
+            var parameters = new NavigationParameters(selectedMediaServer.Id);
+
+            navigationService.Navigate(PageTokens.Directory.ToString(), parameters.ToString());
         }
 
         public ReactiveCollection<MediaServer> MediaServers { get; private set; } = new ReactiveCollection<MediaServer>();

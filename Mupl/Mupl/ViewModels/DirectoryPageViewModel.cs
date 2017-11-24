@@ -3,44 +3,88 @@ using Prism.Windows.Mvvm;
 using Prism.Windows.Navigation;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
-using System.Reactive.Disposables;
+using System;
 using System.Collections.Generic;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 
 namespace Mupl.ViewModels
 {
-    public class DirectoryPageViewModel : ViewModelBase
+    public class DirectoryPageViewModel : ViewModelBase, IDisposable
     {
+        private INavigationService navigationService;
+
         private IMediaServerRepository mediaServerRepository;
 
         private MediaServer mediaServer;
 
-        public DirectoryPageViewModel(IMediaServerRepository mediaServerRepository)
+        private ContentDirectory parentDirectory;
+
+        public DirectoryPageViewModel(INavigationService navigationService, IMediaServerRepository mediaServerRepository)
         {
+            this.navigationService = navigationService;
             this.mediaServerRepository = mediaServerRepository;
+
+            SelectedContentDirectory = new ReactiveProperty<ContentDirectory>();
+            SelectedContentDirectory.ObserveProperty(x => x.Value)
+                .Where(x => x != null)
+                .Subscribe(dir => MoveToContentDirectoryPage(dir))
+                .AddTo(Disposable);
+        }
+
+        public void Dispose()
+        {
+            Disposable.Dispose();
         }
 
         public override async void OnNavigatedTo(NavigatedToEventArgs e, Dictionary<string, object> viewModelState)
         {
             base.OnNavigatedTo(e, viewModelState);
 
-            var id = (string)e.Parameter;
-            mediaServer = await mediaServerRepository.FindAsync(id);
+            var parameters = NavigationParameters.CreateFromString((string)e.Parameter);
+            string mediaServerId = parameters.MediaServerId;
 
+            mediaServer = await mediaServerRepository.FindAsync(mediaServerId);
             if (mediaServer == null)
             {
                 return;
             }
 
-            ContentDirectories = mediaServer.ContentDirectories
-                                    .ToReadOnlyReactiveCollection()
-                                    .AddTo(Disposable);
+            if (parameters.HasParentDirectoryId)
+            {
+                string parentDirId = parameters.ParentDirectoryId;
+                parentDirectory = mediaServer.GetContentDirectory(parentDirId);
+                if (parentDirectory == null)
+                {
+                    return;
+                }
 
-            mediaServer.LoadContentDirectoriesAsync();
+                ContentDirectories = parentDirectory.ContentDirectories
+                                        .ToReadOnlyReactiveCollection()
+                                        .AddTo(Disposable);
+
+                parentDirectory.LoadContentDirectoriesAsync();
+            }
+            else
+            {
+                ContentDirectories = mediaServer.ContentDirectories
+                                        .ToReadOnlyReactiveCollection()
+                                        .AddTo(Disposable);
+
+                mediaServer.LoadContentDirectoriesAsync();
+            }
         }
 
         public ReadOnlyReactiveCollection<ContentDirectory> ContentDirectories { get; private set; }
 
         public ReactiveProperty<ContentDirectory> SelectedContentDirectory { get; set; }
+
+        private void MoveToContentDirectoryPage(ContentDirectory selectedContentDirectory)
+        {
+            var parameters = new NavigationParameters(mediaServer.Id, selectedContentDirectory.Id);
+
+            navigationService.Navigate(PageTokens.Directory.ToString(), parameters.ToString());
+        }
 
         private CompositeDisposable Disposable { get; } = new CompositeDisposable();
     }

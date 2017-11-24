@@ -111,7 +111,6 @@
     <Compile Include="ContentDirectory\BrowseFlag.cs" />
     <Compile Include="ContentDirectory\BrowseResponse.cs" />
     <Compile Include="ContentDirectory\Container.cs" />
-    <Compile Include="ContentDirectory\ContentDirectory.cs" />
     <Compile Include="ContentDirectory\DidlLite.cs" />
     <Compile Include="ContentDirectory\DidlLiteElement.cs" />
     <Compile Include="ContentDirectory\Service.cs" />
