@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using Windows.UI.Xaml.Navigation;
 
 namespace Mupl.ViewModels
 {
@@ -64,7 +65,10 @@ namespace Mupl.ViewModels
                                         .ToReadOnlyReactiveCollection()
                                         .AddTo(Disposable);
 
-                parentDirectory.LoadContentDirectoriesAsync();
+                if (e.NavigationMode == NavigationMode.New)
+                {
+                    parentDirectory.LoadContentDirectoriesAsync();
+                }
             }
             else
             {
@@ -72,7 +76,10 @@ namespace Mupl.ViewModels
                                         .ToReadOnlyReactiveCollection()
                                         .AddTo(Disposable);
 
-                mediaServer.LoadDirectoryItemsAsync();
+                if (e.NavigationMode == NavigationMode.New)
+                {
+                    mediaServer.LoadDirectoryItemsAsync();
+                }
             }
         }
 
