@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Mupl.Model
 {
-    public class ContentDirectory
+    public class ContentDirectory : IDirectoryItem
     {
         private MediaServer mediaServer;
 
@@ -16,15 +16,15 @@ namespace Mupl.Model
 
         public async void LoadContentDirectoriesAsync()
         {
-            var directories = await mediaServer.LoadContentDirectoriesAsync(Id);
+            var dirItems = await mediaServer.LoadDirectoryItemsAsync(Id);
 
-            directories.ToList().ForEach(dir => ContentDirectories.Add(dir));
+            dirItems.ToList().ForEach(dirItem => DirectoryItems.Add(dirItem));
         }
 
         public string Id { get; private set; }
 
         public string Name { get; private set; }
 
-        public ObservableCollection<ContentDirectory> ContentDirectories { get; } = new ObservableCollection<ContentDirectory>();
+        public ObservableCollection<IDirectoryItem> DirectoryItems { get; } = new ObservableCollection<IDirectoryItem>();
     }
 }

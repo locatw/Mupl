@@ -113,6 +113,7 @@
     <Compile Include="ContentDirectory\Container.cs" />
     <Compile Include="ContentDirectory\DidlLite.cs" />
     <Compile Include="ContentDirectory\DidlLiteElement.cs" />
+    <Compile Include="ContentDirectory\Item.cs" />
     <Compile Include="ContentDirectory\Service.cs" />
     <Compile Include="Device.cs" />
     <Compile Include="ContentDirectory\Filter.cs" />

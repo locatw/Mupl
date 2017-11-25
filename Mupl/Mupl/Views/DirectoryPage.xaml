@@ -12,8 +12,8 @@
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <ListView x:Name="directoryList"
                   HorizontalAlignment="Left"
-                  ItemsSource="{Binding ContentDirectories}"
-                  SelectedItem="{Binding SelectedContentDirectory.Value, Mode=TwoWay}"
+                  ItemsSource="{Binding DirectoryItems}"
+                  SelectedItem="{Binding SelectedDirectoryItem.Value, Mode=TwoWay}"
                   SelectionMode="Single">
             <ListView.ItemTemplate>
                 <DataTemplate>

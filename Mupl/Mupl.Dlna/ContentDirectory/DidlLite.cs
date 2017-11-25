@@ -17,6 +17,7 @@ namespace Mupl.Dlna.ContentDirectory
         public void ReadXml(XmlReader reader)
         {
             var containerSerializer = new XmlSerializer(typeof(Container));
+            var itemSerializer = new XmlSerializer(typeof(Item));
             var elements = new List<DidlLiteElement>();
 
             while (reader.Read())
@@ -25,6 +26,11 @@ namespace Mupl.Dlna.ContentDirectory
                 {
                     var container = (Container)containerSerializer.Deserialize(reader.ReadSubtree());
                     elements.Add(container);
+                }
+                else if (reader.Name == "item")
+                {
+                    var item = (Item)itemSerializer.Deserialize(reader.ReadSubtree());
+                    elements.Add(item);
                 }
             }
 

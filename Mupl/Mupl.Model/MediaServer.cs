@@ -23,25 +23,25 @@ namespace Mupl.Model
             return contentDirectoryCache.ContainsKey(objectId) ? contentDirectoryCache[objectId] : null;
         }
 
-        public async void LoadContentDirectoriesAsync()
+        public async void LoadDirectoryItemsAsync()
         {
-            var directories = await LoadContentDirectoriesAsync(Dlna.ContentDirectory.BrowseAction.RootObjectId);
+            var dirItems = await LoadDirectoryItemsAsync(Dlna.ContentDirectory.BrowseAction.RootObjectId);
 
-            directories.ToList().ForEach(dir => ContentDirectories.Add(dir));
+            dirItems.ToList().ForEach(dirItem => DirectoryItems.Add(dirItem));
         }
 
         public string Id { get { return device.Udn; } }
 
         public string Name { get { return device.Name; } }
 
-        public ObservableCollection<ContentDirectory> ContentDirectories { get; } = new ObservableCollection<ContentDirectory>();
+        public ObservableCollection<IDirectoryItem> DirectoryItems { get; } = new ObservableCollection<IDirectoryItem>();
 
-        internal async Task<IEnumerable<ContentDirectory>> LoadContentDirectoriesAsync(string objectId)
+        internal async Task<IEnumerable<IDirectoryItem>> LoadDirectoryItemsAsync(string objectId)
         {
             var contentDirectoryService = device.FindService(Dlna.ServiceKind.ContentDirectory);
             if (contentDirectoryService == null)
             {
-                return new List<ContentDirectory>();
+                return new List<IDirectoryItem>();
             }
 
             var httpClient = new HttpClient();
@@ -49,11 +49,24 @@ namespace Mupl.Model
             var browseAction = CreateBrowseAction(objectId);
             var browseActionResult = await contentDirectoryService.ExecuteActionAsync(httpClient, browseAction);
             var directories = browseActionResult.Body.BrowseResponse.Result.Elements
-                                .Where(elem => elem is Dlna.ContentDirectory.Container)
-                                .Cast<Dlna.ContentDirectory.Container>()
-                                .Select(container => new ContentDirectory(this, container));
+                                .Select<Dlna.ContentDirectory.DidlLiteElement, IDirectoryItem>(elem =>
+                                {
+                                    if (elem is Dlna.ContentDirectory.Container)
+                                    {
+                                        return new ContentDirectory(this, elem as Dlna.ContentDirectory.Container);
+                                    }
+                                    else if (elem is Dlna.ContentDirectory.Item)
+                                    {
+                                        return new Music(this, elem as Dlna.ContentDirectory.Item);
+                                    }
+                                    else
+                                    {
+                                        return null;
+                                    }
+                                })
+                                .Where(item => item != null);
 
-            CacheLoadedContentDirectories(directories);
+            CacheLoadedContentDirectories(directories.Where(elem => elem is ContentDirectory).Cast<ContentDirectory>());
 
             return directories;
         }

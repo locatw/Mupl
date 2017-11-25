@@ -25,9 +25,10 @@ namespace Mupl.ViewModels
             this.navigationService = navigationService;
             this.mediaServerRepository = mediaServerRepository;
 
-            SelectedContentDirectory = new ReactiveProperty<ContentDirectory>();
-            SelectedContentDirectory.ObserveProperty(x => x.Value)
-                .Where(x => x != null)
+            SelectedDirectoryItem = new ReactiveProperty<IDirectoryItem>();
+            SelectedDirectoryItem.ObserveProperty(x => x.Value)
+                .Where(x => x is ContentDirectory)
+                .Cast<ContentDirectory>()
                 .Subscribe(dir => MoveToContentDirectoryPage(dir))
                 .AddTo(Disposable);
         }
@@ -59,7 +60,7 @@ namespace Mupl.ViewModels
                     return;
                 }
 
-                ContentDirectories = parentDirectory.ContentDirectories
+                DirectoryItems = parentDirectory.DirectoryItems
                                         .ToReadOnlyReactiveCollection()
                                         .AddTo(Disposable);
 
@@ -67,17 +68,17 @@ namespace Mupl.ViewModels
             }
             else
             {
-                ContentDirectories = mediaServer.ContentDirectories
+                DirectoryItems = mediaServer.DirectoryItems
                                         .ToReadOnlyReactiveCollection()
                                         .AddTo(Disposable);
 
-                mediaServer.LoadContentDirectoriesAsync();
+                mediaServer.LoadDirectoryItemsAsync();
             }
         }
 
-        public ReadOnlyReactiveCollection<ContentDirectory> ContentDirectories { get; private set; }
+        public ReadOnlyReactiveCollection<IDirectoryItem> DirectoryItems { get; private set; }
 
-        public ReactiveProperty<ContentDirectory> SelectedContentDirectory { get; set; }
+        public ReactiveProperty<IDirectoryItem> SelectedDirectoryItem { get; set; }
 
         private void MoveToContentDirectoryPage(ContentDirectory selectedContentDirectory)
         {
