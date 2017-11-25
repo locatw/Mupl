@@ -18,6 +18,7 @@ namespace Mupl.Model
         {
             var dirItems = await mediaServer.LoadDirectoryItemsAsync(Id);
 
+            DirectoryItems.Clear();
             dirItems.ToList().ForEach(dirItem => DirectoryItems.Add(dirItem));
         }
 

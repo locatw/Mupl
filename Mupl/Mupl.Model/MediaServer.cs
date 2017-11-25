@@ -27,6 +27,7 @@ namespace Mupl.Model
         {
             var dirItems = await LoadDirectoryItemsAsync(Dlna.ContentDirectory.BrowseAction.RootObjectId);
 
+            DirectoryItems.Clear();
             dirItems.ToList().ForEach(dirItem => DirectoryItems.Add(dirItem));
         }
 
