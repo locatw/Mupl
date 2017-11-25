@@ -7,7 +7,7 @@ using Windows.Web.Http;
 
 namespace Mupl.Model
 {
-    public class MediaServer : BindableBase
+    public class MediaServer : BindableBase, IContentDirectory
     {
         private Dlna.Device device;
 
@@ -23,7 +23,7 @@ namespace Mupl.Model
             return contentDirectoryCache.ContainsKey(objectId) ? contentDirectoryCache[objectId] : null;
         }
 
-        public async void LoadDirectoryItemsAsync()
+        public async Task LoadDirectoryItemsAsync()
         {
             var dirItems = await LoadDirectoryItemsAsync(Dlna.ContentDirectory.BrowseAction.RootObjectId);
 

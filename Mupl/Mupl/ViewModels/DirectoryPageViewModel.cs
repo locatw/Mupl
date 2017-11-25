@@ -19,7 +19,7 @@ namespace Mupl.ViewModels
 
         private MediaServer mediaServer;
 
-        private ContentDirectory parentDirectory;
+        private IContentDirectory contentDirectory;
 
         public DirectoryPageViewModel(INavigationService navigationService, IMediaServerRepository mediaServerRepository)
         {
@@ -54,32 +54,25 @@ namespace Mupl.ViewModels
 
             if (parameters.HasParentDirectoryId)
             {
-                string parentDirId = parameters.ParentDirectoryId;
-                parentDirectory = mediaServer.GetContentDirectory(parentDirId);
-                if (parentDirectory == null)
-                {
-                    return;
-                }
-
-                DirectoryItems = parentDirectory.DirectoryItems
-                                        .ToReadOnlyReactiveCollection()
-                                        .AddTo(Disposable);
-
-                if (e.NavigationMode == NavigationMode.New)
-                {
-                    parentDirectory.LoadContentDirectoriesAsync();
-                }
+                contentDirectory = mediaServer.GetContentDirectory(parameters.ParentDirectoryId);
             }
             else
             {
-                DirectoryItems = mediaServer.DirectoryItems
-                                        .ToReadOnlyReactiveCollection()
-                                        .AddTo(Disposable);
+                contentDirectory = mediaServer;
+            }
 
-                if (e.NavigationMode == NavigationMode.New)
-                {
-                    mediaServer.LoadDirectoryItemsAsync();
-                }
+            if (contentDirectory == null)
+            {
+                return;
+            }
+
+            DirectoryItems = contentDirectory.DirectoryItems
+                                .ToReadOnlyReactiveCollection()
+                                .AddTo(Disposable);
+
+            if (e.NavigationMode == NavigationMode.New)
+            {
+                await contentDirectory.LoadDirectoryItemsAsync();
             }
         }
 

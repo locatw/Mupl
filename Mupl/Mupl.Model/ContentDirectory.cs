@@ -1,9 +1,10 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Mupl.Model
 {
-    public class ContentDirectory : IDirectoryItem
+    public class ContentDirectory : IContentDirectory, IDirectoryItem
     {
         private MediaServer mediaServer;
 
@@ -14,7 +15,7 @@ namespace Mupl.Model
             Name = container.Title;
         }
 
-        public async void LoadContentDirectoriesAsync()
+        public async Task LoadDirectoryItemsAsync()
         {
             var dirItems = await mediaServer.LoadDirectoryItemsAsync(Id);
 

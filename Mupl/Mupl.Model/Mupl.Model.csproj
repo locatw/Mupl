@@ -107,6 +107,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="ContentDirectory.cs" />
+    <Compile Include="IContentDirectory.cs" />
     <Compile Include="IDirectoryItem.cs" />
     <Compile Include="IMediaServerRepository.cs" />
     <Compile Include="MediaServer.cs" />
